@@ -20,7 +20,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://app.composer.trade/portfolio",
+        "https://app.composer.trade/editor",
         "https://app.composer.trade/editor/*"
       ],
       "js": [

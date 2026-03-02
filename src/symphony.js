@@ -655,14 +655,70 @@
     // Navigation & Initialization
     // ==========================================
 
-    if (window.location.pathname.startsWith('/editor/') && !window.location.pathname.endsWith('/detail')) {
-        initSymphonyWidget()
+    const isStrategyEditorPath = (pathname) => {
+        if (!pathname.startsWith('/editor/')) {
+            return false
+        }
+
+        const segments = pathname.split('/').filter(Boolean)
+        if (segments.length < 2) {
+            return false
+        }
+
+        // Do not render on detail sub-pages where there is no sidebar target.
+        if (segments[2] === 'detail') {
+            return false
+        }
+
+        return true
     }
 
-    window.navigation.addEventListener("navigate", (event) => {
-        if (event.destination.url.startsWith('https://app.composer.trade/editor/')
-            && !event.destination.url.endsWith('/detail')) {
+    const shouldInitWidgetForUrl = (url) => {
+        try {
+            const parsedUrl = new URL(url, window.location.origin)
+            return parsedUrl.hostname === 'app.composer.trade'
+                && isStrategyEditorPath(parsedUrl.pathname)
+        } catch (error) {
+            debug('Failed to parse URL for widget init', url, error)
+            return false
+        }
+    }
+
+    const tryInitWidgetForCurrentUrl = () => {
+        if (shouldInitWidgetForUrl(window.location.href)) {
             initSymphonyWidget()
         }
-    })
+    }
+
+    tryInitWidgetForCurrentUrl()
+
+    if (window.navigation?.addEventListener) {
+        window.navigation.addEventListener("navigate", (event) => {
+            if (shouldInitWidgetForUrl(event.destination.url)) {
+                initSymphonyWidget()
+            }
+        })
+    } else {
+        const queueInit = () => {
+            setTimeout(tryInitWidgetForCurrentUrl, 0)
+        }
+
+        const patchHistoryMethod = (methodName) => {
+            if (typeof history[methodName] !== 'function') {
+                return
+            }
+
+            const originalMethod = history[methodName]
+            history[methodName] = function (...args) {
+                const result = originalMethod.apply(this, args)
+                queueInit()
+                return result
+            }
+        }
+
+        patchHistoryMethod('pushState')
+        patchHistoryMethod('replaceState')
+        window.addEventListener('popstate', tryInitWidgetForCurrentUrl)
+        window.addEventListener('hashchange', tryInitWidgetForCurrentUrl)
+    }
 })()

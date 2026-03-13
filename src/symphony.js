@@ -154,10 +154,6 @@
 
     function convertForQuantMage(data) {
         const clone = JSON.parse(JSON.stringify(data))
-
-        if (!('asset_class' in clone)) clone['asset_class'] = 'EQUITIES'
-        if (!('asset_classes' in clone)) clone['asset_classes'] = ['EQUITIES']
-
         walkAndConvert(clone)
         return clone
     }
@@ -169,26 +165,8 @@
         }
         if (typeof node !== 'object' || node === null) return
 
-        const step = node['step']
-        if (step === 'if-child') {
-            for (const key of ['lhs-window-days', 'rhs-window-days', 'rhs-val']) {
-                if (key in node && typeof node[key] !== 'string') node[key] = String(node[key])
-            }
-        } else if (step === 'asset') {
-            for (const key of ['price', 'has_marketcap', 'dollar_volume']) {
-                delete node[key]
-            }
-        } else if (step === 'filter' && 'sort-by-window-days' in node) {
-            const window = node['sort-by-window-days']
-            delete node['sort-by-window-days']
-            if (!('sort-by-fn-params' in node)) {
-                const parsed = Number(window)
-                node['sort-by-fn-params'] = { window: isNaN(parsed) ? window : parsed }
-            }
-        } else if (step === 'wt-inverse-vol') {
-            if ('window-days' in node && typeof node['window-days'] !== 'string') {
-                node['window-days'] = String(node['window-days'])
-            }
+        if (node['window-days'] !== undefined && typeof node['window-days'] === 'number') {
+            node['window-days'] = String(node['window-days'])
         }
 
         for (const value of Object.values(node)) walkAndConvert(value)

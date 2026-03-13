@@ -149,6 +149,52 @@
     }
 
     // ==========================================
+    // QuantMage Converter - fixes Composer's new JSON format for QuantMage import
+    // ==========================================
+
+    function convertForQuantMage(data) {
+        const clone = JSON.parse(JSON.stringify(data))
+
+        if (!('asset_class' in clone)) clone['asset_class'] = 'EQUITIES'
+        if (!('asset_classes' in clone)) clone['asset_classes'] = ['EQUITIES']
+
+        walkAndConvert(clone)
+        return clone
+    }
+
+    function walkAndConvert(node) {
+        if (Array.isArray(node)) {
+            for (const item of node) walkAndConvert(item)
+            return
+        }
+        if (typeof node !== 'object' || node === null) return
+
+        const step = node['step']
+        if (step === 'if-child') {
+            for (const key of ['lhs-window-days', 'rhs-window-days', 'rhs-val']) {
+                if (key in node && typeof node[key] !== 'string') node[key] = String(node[key])
+            }
+        } else if (step === 'asset') {
+            for (const key of ['price', 'has_marketcap', 'dollar_volume']) {
+                delete node[key]
+            }
+        } else if (step === 'filter' && 'sort-by-window-days' in node) {
+            const window = node['sort-by-window-days']
+            delete node['sort-by-window-days']
+            if (!('sort-by-fn-params' in node)) {
+                const parsed = Number(window)
+                node['sort-by-fn-params'] = { window: isNaN(parsed) ? window : parsed }
+            }
+        } else if (step === 'wt-inverse-vol') {
+            if ('window-days' in node && typeof node['window-days'] !== 'string') {
+                node['window-days'] = String(node['window-days'])
+            }
+        }
+
+        for (const value of Object.values(node)) walkAndConvert(value)
+    }
+
+    // ==========================================
     // Widget Initialization
     // ==========================================
 
@@ -178,6 +224,7 @@
         div.appendChild(stripMetadataButton())
         div.appendChild(clickToCopy())
         div.appendChild(downloadJsonButton())
+        div.appendChild(downloadQuantMageButton())
         div.appendChild(findAndReplaceForm())
         div.appendChild(donate())
 
@@ -504,6 +551,67 @@
             text.innerText = 'Downloaded'
             setTimeout(() => {
                 text.innerText = 'Download JSON'
+            }, 1000)
+        })
+
+        span.appendChild(text)
+        button.appendChild(span)
+        wrapper.appendChild(button)
+        return wrapper
+    }
+
+    const downloadQuantMageButton = () => {
+        const downloadQuantMage = () => {
+            const data = getSymphonyData()
+            const converted = convertForQuantMage(data)
+            const jsonString = JSON.stringify(converted)
+
+            const pathParts = window.location.pathname.split('/')
+            const symphonyId = pathParts[pathParts.length - 1] || 'symphony'
+
+            const blob = new Blob([jsonString], { type: 'application/json' })
+            const url = URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.href = url
+            link.download = `${symphonyId}_quantmage.json`
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+            URL.revokeObjectURL(url)
+        }
+
+        let wrapper = document.createElement('div')
+        wrapper.classList.add('rounded', 'flex', 'border', 'border-asset-border', 'shadow-sm', 'bg-panel-bg', 'divide-x', 'divide-solid', 'divide-asset-border')
+
+        let button = document.createElement('button')
+        button.classList.add('w-full', 'text-sm', 'font-light', 'flex', 'items-center', 'justify-center', 'py-2', 'shadow-inner', 'transition', 'focus:outline-none', 'leading-none', 'select-none', 'rounded', 'text-dark-soft', 'bg-background')
+
+        let span = document.createElement('span')
+        span.classList.add('flex', 'items-center', 'space-x-2')
+
+        const svgNs = 'http://www.w3.org/2000/svg'
+        const svg = document.createElementNS(svgNs, 'svg')
+        svg.setAttribute('fill', 'none')
+        svg.setAttribute('viewBox', '0 0 24 24')
+        svg.setAttribute('stroke-width', '1.5')
+        svg.setAttribute('stroke', 'currentColor')
+        svg.setAttribute('height', '16')
+        svg.setAttribute('width', '16')
+        const path = document.createElementNS(svgNs, 'path')
+        path.setAttribute('stroke-linecap', 'round')
+        path.setAttribute('stroke-linejoin', 'round')
+        path.setAttribute('d', 'M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3')
+        svg.appendChild(path)
+        span.appendChild(svg)
+
+        let text = document.createElement('span')
+        text.innerText = 'Download for QuantMage'
+
+        button.addEventListener('click', (e) => {
+            downloadQuantMage()
+            text.innerText = 'Downloaded'
+            setTimeout(() => {
+                text.innerText = 'Download for QuantMage'
             }, 1000)
         })
 

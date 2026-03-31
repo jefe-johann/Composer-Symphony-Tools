@@ -1,8 +1,8 @@
-# symphony-tools
+# Composer Symphony Tools
 
 Chrome Extension that provides tools and enhancements to the [Composer.trade](https://composer.trade) user interface.
 
-> **Note:** This is the actively maintained fork of [dpods/symphony-tools](https://github.com/dpods/symphony-tools), which is no longer maintained. If you found the original project, this is the canonical version going forward.
+> Forked from [dpods/symphony-tools](https://github.com/dpods/symphony-tools), which appears to be no longer maintained. This fork is actively developed.
 
 ### Features
 

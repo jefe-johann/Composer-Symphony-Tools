@@ -5,16 +5,20 @@ let pingCount = 0;
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name !== "keep-alive") return;
 
-  const shouldLog = pingCount === 0 || pingCount % 10 === 0;
-  pingCount++;
+  chrome.storage.local.get({ keepAlive: true }, (data) => {
+    if (!data.keepAlive) return;
 
-  fetch("https://app.composer.trade/portfolio", {
-    credentials: "include",
-  })
-    .then((res) => {
-      if (shouldLog) console.log(`[keep-alive] ping #${pingCount} → ${res.status}`);
+    const shouldLog = pingCount === 0 || pingCount % 10 === 0;
+    pingCount++;
+
+    fetch("https://app.composer.trade/portfolio", {
+      credentials: "include",
     })
-    .catch((err) => {
-      if (shouldLog) console.warn(`[keep-alive] ping #${pingCount} failed:`, err);
-    });
+      .then((res) => {
+        if (shouldLog) console.log(`[keep-alive] ping #${pingCount} → ${res.status}`);
+      })
+      .catch((err) => {
+        if (shouldLog) console.warn(`[keep-alive] ping #${pingCount} failed:`, err);
+      });
+  });
 });

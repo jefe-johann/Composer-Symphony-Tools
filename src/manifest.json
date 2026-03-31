@@ -3,7 +3,7 @@
   "name": "J's Symphony Tools Extension",
   "description": "Utility extension that makes working with Composer Symphonies easier",
   "version": "3.2.0",
-  "permissions": ["alarms"],
+  "permissions": ["alarms", "storage"],
   "host_permissions": ["https://app.composer.trade/*"],
   "background": {
     "service_worker": "background.js"
@@ -14,7 +14,8 @@
     "128": "images/icon128.png"
   },
   "action": {
-    "default_title": "Chrome Addon v3 Starter",
+    "default_title": "Composer Symphony Tools",
+    "default_popup": "popup.html",
     "world": "MAIN",
     "default_icon": {
       "16": "images/icon16.png",

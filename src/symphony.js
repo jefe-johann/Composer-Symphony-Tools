@@ -563,6 +563,7 @@
 
         let button = document.createElement('button')
         button.classList.add('w-full', 'text-sm', 'font-light', 'flex', 'items-center', 'justify-center', 'py-2', 'shadow-inner', 'transition', 'focus:outline-none', 'leading-none', 'select-none', 'rounded', 'text-dark-soft', 'bg-background')
+        button.title = 'Fixes data format issues that cause imports to fail in QuantMage'
 
         let span = document.createElement('span')
         span.classList.add('flex', 'items-center', 'space-x-2')

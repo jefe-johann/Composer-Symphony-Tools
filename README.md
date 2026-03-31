@@ -21,7 +21,7 @@ Chrome Extension that provides tools and enhancements to the [Composer.trade](ht
 
 #### Manual Installation
 1. Go to the latest release and download the .zip file
-    https://github.com/jefe-johann/symphony-tools/releases/latest
+    https://github.com/jefe-johann/Composer-Symphony-Tools/releases/latest
 2. Unzip the contents
 3. In Chrome, navigate to [chrome://extensions](chrome://extensions/) in the URL bar
 4. Click the **Load unpacked** button and select the `src` folder (where the `manifest.json` file is).

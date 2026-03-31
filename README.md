@@ -12,16 +12,9 @@ Chrome Extension that provides tools and enhancements to the [Composer.trade](ht
   - Copy JSON / EDN (resilient to Composer API changes)
   - Download JSON
   - Download for QuantMage (converts data format for compatibility with QuantMage imports)
-- **Portfolio**
-  - Aggregate holdings and allocations across all symphonies
-  - Display broker type for account (Alpaca/Apex)
 - **Background**
   - Keep-alive service to maintain session with the Composer API
 
-Aggregate Holdings
-![Symphony Tools Extension - Portfolio](docs/images/portfolio.png)
-
-Symphony Editor
 ![Symphony Tools Extension - Symphony Editor](docs/images/symphony-editor.png)
 
 ### Installation

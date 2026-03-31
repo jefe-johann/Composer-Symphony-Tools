@@ -603,10 +603,10 @@
     const donate = () => {
         const wrapper = document.createElement('div')
         const link = document.createElement('a')
-        link.href = 'https://www.buymeacoffee.com/dpods'
+        link.href = 'https://github.com/jefe-johann/Composer-Symphony-Tools'
         link.className = 'text-xs underline font-light'
         link.target = '_blank'
-        link.textContent = 'Support this extension'
+        link.textContent = 'View on GitHub'
         wrapper.appendChild(link)
         return wrapper
     }

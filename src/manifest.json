@@ -29,8 +29,17 @@
         "https://app.composer.trade/*"
       ],
       "js": [
+        "bridge.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://app.composer.trade/*"
+      ],
+      "js": [
         "common.js",
-        "symphony.js"
+        "symphony.js",
+        "session-logger.js"
       ],
       "world": "MAIN"
     }

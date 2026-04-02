@@ -199,10 +199,10 @@
         sidebarEl.appendChild(div)
 
         div.appendChild(logo())
-        div.appendChild(stripMetadataButton())
-        div.appendChild(clickToCopy())
         div.appendChild(downloadJsonButton())
         div.appendChild(downloadQuantMageButton())
+        div.appendChild(clickToCopy())
+        div.appendChild(stripMetadataButton())
         div.appendChild(findAndReplaceForm())
         div.appendChild(donate())
 
@@ -808,4 +808,20 @@
         window.addEventListener('popstate', tryInitWidgetForCurrentUrl)
         window.addEventListener('hashchange', tryInitWidgetForCurrentUrl)
     }
+
+    // ==========================================
+    // Keep-Alive: Synthetic User Activity
+    // Composer has a ~30min client-side idle timeout.
+    // Dispatch synthetic events to reset the idle timer,
+    // even when the tab is hidden/backgrounded.
+    // ==========================================
+
+    setInterval(() => {
+        if (localStorage.getItem('ste_keepAlive') === 'false') return
+        document.dispatchEvent(new MouseEvent('mousemove', {
+            bubbles: true,
+            clientX: Math.floor(Math.random() * (window.innerWidth || 800)),
+            clientY: Math.floor(Math.random() * (window.innerHeight || 600)),
+        }))
+    }, 4 * 60 * 1000)
 })()

@@ -38,8 +38,7 @@
       ],
       "js": [
         "common.js",
-        "symphony.js",
-        "session-logger.js"
+        "symphony.js"
       ],
       "world": "MAIN"
     }

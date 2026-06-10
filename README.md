@@ -1,6 +1,6 @@
 # Composer Symphony Tools
 
-Chrome Extension that provides tools and enhancements to the [Composer.trade](https://composer.trade) user interface.
+Browser extension that provides tools and enhancements to the [Composer.trade](https://composer.trade) user interface.
 
 > Forked from [dpods/symphony-tools](https://github.com/dpods/symphony-tools), which appears to be no longer maintained. This fork is actively developed.
 
@@ -19,7 +19,7 @@ Chrome Extension that provides tools and enhancements to the [Composer.trade](ht
 
 ### Installation
 
-#### Manual Installation
+#### Chrome Manual Installation
 1. Go to the latest release and download the .zip file
     https://github.com/jefe-johann/Composer-Symphony-Tools/releases/latest
 2. Unzip the contents
@@ -29,6 +29,22 @@ Chrome Extension that provides tools and enhancements to the [Composer.trade](ht
 6. Where to find the widgets
    1. In the Symphony editor, the widget should appear on the sidebar under the Watch/Share buttons.
    2. In the portfolio view, the widget should appear at the bottom of the page under all your live symphonies.
+
+#### Safari Local Development
+
+The Safari wrapper lives in `safari/SymphonyToolsSafari` and references the shared files in `src/`, so Chrome and Safari use the same extension code.
+
+1. Build the local Safari app:
+
+    ```bash
+    npm run safari:build
+    ```
+
+2. Open `safari/SymphonyToolsSafari/SymphonyToolsSafari.xcodeproj` in Xcode.
+3. Run the `SymphonyToolsSafari` scheme to register the containing app and extension with Safari.
+4. In Safari, go to **Settings > Extensions** and enable **Composer Symphony Tools**.
+5. Grant the extension access to `app.composer.trade`.
+6. If the unsigned local extension does not appear, enable Safari's Develop menu and choose **Develop > Allow Unsigned Extensions**, then run the app again.
 
 #### Chrome Web Store
 The original extension is available on the Chrome Web Store but is based on the unmaintained upstream version:

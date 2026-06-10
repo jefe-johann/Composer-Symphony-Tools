@@ -1,9 +1,10 @@
 const toggle = document.getElementById('keepAliveToggle')
+const extensionStorage = globalThis.steExtensionApi.storage
 
-chrome.storage.local.get({ keepAlive: true }, (data) => {
+extensionStorage.local.get({ keepAlive: true }).then((data) => {
   toggle.checked = data.keepAlive
 })
 
 toggle.addEventListener('change', () => {
-  chrome.storage.local.set({ keepAlive: toggle.checked })
+  extensionStorage.local.set({ keepAlive: toggle.checked })
 })

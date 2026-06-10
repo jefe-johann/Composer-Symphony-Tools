@@ -6,7 +6,9 @@
     "build:major": "node bin/build.js major",
     "build:minor": "node bin/build.js minor",
     "build:patch": "node bin/build.js patch",
-    "sandbox": "node bin/test.js"
+    "sandbox": "node bin/test.js",
+    "safari:generate": "xcrun safari-web-extension-packager --macos-only --no-open --no-prompt --force --project-location safari --app-name SymphonyToolsSafari --bundle-identifier com.jeff.symphonytools.SymphonyToolsSafari src",
+    "safari:build": "xcodebuild -project safari/SymphonyToolsSafari/SymphonyToolsSafari.xcodeproj -scheme SymphonyToolsSafari -configuration Debug -derivedDataPath safari/DerivedData CODE_SIGNING_ALLOWED=NO build"
   },
   "devDependencies": {
     "adm-zip": "^0.5.12",

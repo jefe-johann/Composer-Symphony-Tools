@@ -158,6 +158,20 @@
         return clone
     }
 
+    // Composer now emits qualified symbols like "EQUITIES::SOXL.USD" or
+    // "EQUITIES::IGIB//USD" instead of plain tickers ("SOXL", "IGIB"), which
+    // QuantMage's importer rejects. Strip the asset-class prefix and the
+    // currency suffix to recover the bare ticker.
+    function normalizeTicker(value) {
+        if (typeof value !== 'string') return value
+        if (!/^[A-Z]+::/.test(value)) return value
+        return value
+            .replace(/^[A-Z]+::/, '')        // drop "EQUITIES::" prefix
+            .replace(/(?:\/\/|\.)[A-Z]{3}$/, '') // drop ".USD" / "//USD" suffix
+    }
+
+    const TICKER_FIELDS = ['ticker', 'lhs-val', 'rhs-val']
+
     function walkAndConvert(node) {
         if (Array.isArray(node)) {
             for (const item of node) walkAndConvert(item)
@@ -167,6 +181,12 @@
 
         if (node['window-days'] !== undefined && typeof node['window-days'] === 'number') {
             node['window-days'] = String(node['window-days'])
+        }
+
+        for (const field of TICKER_FIELDS) {
+            if (node[field] !== undefined) {
+                node[field] = normalizeTicker(node[field])
+            }
         }
 
         for (const value of Object.values(node)) walkAndConvert(value)

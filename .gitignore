@@ -2,6 +2,10 @@
 
 node_modules
 artifacts
+safari/DerivedData
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
 
 .env
 

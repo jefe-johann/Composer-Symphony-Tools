@@ -1,16 +1,22 @@
-// Bridge: syncs chrome.storage settings to localStorage for MAIN world access.
+// Bridge: syncs extension storage settings to localStorage for page script access.
 // ISOLATED world content scripts share localStorage with the page but can
-// access chrome.storage APIs that MAIN world scripts cannot.
+// access extension APIs that page scripts cannot.
 
 function syncKeepAlive(value) {
   localStorage.setItem('ste_keepAlive', JSON.stringify(value))
 }
 
-chrome.storage.local.get({ keepAlive: true }, (data) => {
+const extensionStorage = globalThis.steExtensionApi.storage
+
+extensionStorage.local.get({ keepAlive: true }).then((data) => {
   syncKeepAlive(data.keepAlive)
 })
 
-chrome.storage.onChanged.addListener((changes) => {
+extensionStorage.onChanged.addListener((changes, areaName) => {
+  if (areaName && areaName !== 'local') {
+    return
+  }
+
   if (changes.keepAlive) {
     syncKeepAlive(changes.keepAlive.newValue)
   }

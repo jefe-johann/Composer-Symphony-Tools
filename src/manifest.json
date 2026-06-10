@@ -17,7 +17,6 @@
   "action": {
     "default_title": "Composer Symphony Tools",
     "default_popup": "popup.html",
-    "world": "MAIN",
     "default_icon": {
       "16": "images/icon16.png",
       "48": "images/icon48.png",
@@ -30,18 +29,21 @@
         "https://app.composer.trade/*"
       ],
       "js": [
-        "bridge.js"
+        "extension-api.js",
+        "bridge.js",
+        "injector.js"
       ]
-    },
+    }
+  ],
+  "web_accessible_resources": [
     {
-      "matches": [
-        "https://app.composer.trade/*"
-      ],
-      "js": [
+      "resources": [
         "common.js",
         "symphony.js"
       ],
-      "world": "MAIN"
+      "matches": [
+        "https://app.composer.trade/*"
+      ]
     }
   ],
   "externally_connectable": {
